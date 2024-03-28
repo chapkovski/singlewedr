@@ -103,7 +103,7 @@ class Constants(BaseConstants):
 
     num_rounds = 1
 
-    time_for_work = 60
+    time_for_work = 120
 
 
 class Subsession(BaseSubsession):
