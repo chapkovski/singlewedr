@@ -15,10 +15,12 @@ class WorkingPage(Page):
     def js_vars(self):
         time_to_go = self.participant.vars.setdefault('time_to_go', (
                 datetime.now(timezone.utc) + timedelta(seconds=Constants.time_for_work)).timestamp())
+        remaining_time = time_to_go - datetime.now(timezone.utc).timestamp()
         current_task = self.player.get_uncompleted_task()
 
         return dict(
-            time_to_go=time_to_go,
+            remaining_time=remaining_time,
+            completed_tasks= self.player.tasks.filter(solved=True).count(),
             **current_task.to_dict()
         )
 

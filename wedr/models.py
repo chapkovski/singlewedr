@@ -98,11 +98,11 @@ class Constants(BaseConstants):
     name_in_url = 'wedr'
     players_per_group = 2
     # we need to read words from data/words.txt
-    # with open('data/words.csv', 'r') as f:
-    #     words = [i.strip() for i in f.readlines()]
-    words = ['mandarin']
+    with open('data/words.csv', 'r') as f:
+        words = [i.strip() for i in f.readlines()]
+
     num_rounds = 1
-    words = sample(words, k=num_rounds)
+
     time_for_work = 60
 
 
@@ -116,6 +116,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     def get_uncompleted_task(self):
+
         unclosed_task =  self.tasks.filter(solved=False).first()
         if unclosed_task:
             return unclosed_task
@@ -134,13 +135,23 @@ class Player(BasePlayer):
             word=decoded_word,
             encoded_word=encoded_word
         )
+        logger.critical(f'new word: {task.word} ')
         return task
 
     def handle_completed(self, data):
-        logger.info('Got completion')
+        logger.info(f'Got completion {data}')
+        word = data.get('decodedWord')
+        task = self.tasks.filter(solved=False).first()
+        if task.answer == word:
+            task.solved = True
+            task.save()
+        else:
+            return dict(type='new_task', data=task.to_dict())
         new_task = self.create_new_task()
+        new_task_data= new_task.to_dict()
+        new_task_data['completed_tasks'] = self.tasks.filter(solved=True).count()
         return {'type': 'new_task',
-                'data': new_task.to_dict()}
+                'data': new_task_data}
 
     def process_data(player, data):
         logger.info(f"Got data: {data}")

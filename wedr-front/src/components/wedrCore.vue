@@ -156,11 +156,35 @@ const handleKeydown = (inputIndex, event) => {
     }
     else if (event.key === 'Enter') {
         event.preventDefault();
-        // Your existing logic for Enter key...
+        // Move to the next input field if not all inputs are filled
+        const nextInput = inputRefs.value[inputIndex + 1];
+        if (nextInput) {
+            nextInput.focus();
+        } else {
+            // Optionally, handle submission or other actions when all inputs are filled
+            // and Enter is pressed on the last input
+            if (allInputsFilled.value) {
+                handleSubmit();
+                handleReset();
+            }
+        }
     }
     else if (event.key === 'Backspace' && userInputs.value[inputIndex].trim() === '') {
-        // Your existing logic for Backspace key...
+        const prevInput = inputRefs.value[inputIndex - 1];
+        if (prevInput) {
+            prevInput.focus();
+        }
     }
+};
+const userInputsConcatenated = computed(() => userInputs.value.join(''));
+const handleSubmit = () => {
+    wsStore.sendMessage('completed', {
+        decodedWord: userInputsConcatenated.value,
+        completedAt: new Date().toISOString(),
+        // timeElapsed: (new Date() - new Date(startTime.value)) / 1000,
+        // startTime: startTime.value,
+
+    });
 };
 
 const handleFocus = (event) => {

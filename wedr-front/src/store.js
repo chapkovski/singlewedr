@@ -5,6 +5,7 @@ import { useWebSocket } from '@vueuse/core';
 export const useWebSocketStore = defineStore({
   id: 'webSocketStore',
   state: () => ({
+    completed_tasks: js_vars.completed_tasks,
     remaining_time: js_vars.remaining_time,
     word: js_vars.word,
     encoded_word: js_vars.encoded_word,
@@ -13,11 +14,12 @@ export const useWebSocketStore = defineStore({
   }),
   actions: {
 
-    handle_new_word(newMessage) {
-      const { word, encoded_word, dictionary } = newMessage.data;
+    handle_new_task(newMessage) {
+      const { word, encoded_word, dictionary, completed_tasks } = newMessage.data;
       this.word = word;
       this.encoded_word = encoded_word;
       this.dictionary = dictionary;
+      this.completed_tasks = completed_tasks;
 
     },
 
@@ -49,6 +51,7 @@ export const useWebSocketStore = defineStore({
       that.status = status;
     },
     async sendMessage(type, data) {
+      console.log('Sending message:', type, data);
       // Use the 'send' function from the state
       liveSend({
         type,

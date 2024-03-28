@@ -4,7 +4,7 @@
 import { useWebSocketStore } from './store';
 import { storeToRefs } from "pinia";
 const wsStore = useWebSocketStore();
-const { remaining_time } = storeToRefs(useWebSocketStore());
+const { remaining_time, completed_tasks } = storeToRefs(useWebSocketStore());
 
 import wedrCore from './components/wedrCore.vue';
 import { computed, ref } from 'vue';
@@ -13,7 +13,9 @@ const { smAndDown } = useDisplay();
 const drawer = ref(false);
 
 const instructionsHtml = document.getElementById('instructions').innerHTML;
-
+const onCountdownEnd = () => {
+  document.getElementById('form').submit();
+};
 
 </script>
 <template>
@@ -34,13 +36,17 @@ const instructionsHtml = document.getElementById('instructions').innerHTML;
     </v-navigation-drawer>
     <v-app-bar app>
       <v-toolbar-title>Decoding task</v-toolbar-title>
-      <vue-countdown :time="remaining_time * 1000" v-slot="{ days, hours, minutes, seconds }">
-        Time Remaining：{{ days }} days, {{ hours }} hours, {{ minutes }} minutes, {{ seconds }} seconds.
+      <vue-countdown :time="remaining_time * 1000" v-slot="{ days, hours, minutes, seconds }" @end="onCountdownEnd">
+        Time Remaining：{{ minutes }} minutes, {{ seconds }} seconds.
       </vue-countdown>
 
       <v-spacer></v-spacer> <!-- This pushes the menu items to the right -->
-
-      <v-btn outlined elevation="3" @click="drawer = !drawer">
+      <v-sheet class="mx-3 p-1 border bordered" elevation="3"> Completed tasks:
+        <v-progress-circular :model-value="completed_tasks" :rotate="360" :size="50" :width="15" color="teal">
+          {{ completed_tasks }}
+        </v-progress-circular>
+      </v-sheet>
+      <v-btn class="mx-3" outlined elevation="3" @click="drawer = !drawer">
         Instructions
       </v-btn>
 
