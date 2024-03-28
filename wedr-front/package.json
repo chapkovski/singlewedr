@@ -1,0 +1,28 @@
+{
+  "name": "wedr-front",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build  --emptyOutDi",
+    "preview": "vite preview",
+    "watch": "vite build --watch --emptyOutDir"
+  },
+  "dependencies": {
+    "@chenfengyuan/vue-countdown": "^2.1.2",
+    "@mdi/font": "^7.2.96",
+    "@vueuse/core": "^10.5.0",
+    "lodash": "^4.17.21",
+    "pinia": "^2.1.7",
+    "showdown": "^2.1.0",
+    "survey-core": "^1.9.109",
+    "survey-vue3-ui": "^1.9.109",
+    "vue": "^3.3.4",
+    "vue-native-websocket-vue3": "^3.1.7",
+    "vuetify": "^3.3.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.3.4",
+    "vite": "^4.4.9"
+  }
+}
