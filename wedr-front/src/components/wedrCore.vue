@@ -1,5 +1,16 @@
 <template>
     <div>
+        <transition enter-active-class="animate__animated animate__fadeInUp"
+            leave-active-class="animate__animated animate__fadeOutDown">
+            <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="2000" top>
+                {{ snackbar.text }}
+                <template v-slot:action="{ attrs }">
+                    <v-btn color="white" text v-bind="attrs" @click="snackbar.show = false">
+                        Close
+                    </v-btn>
+                </template>
+            </v-snackbar>
+        </transition>
 
         <v-dialog v-model="showModal" max-width="290" persistent>
 
@@ -115,6 +126,11 @@ const checkWordMatch = () => {
 
 const userInputs = ref(encoded_word.value.map(() => ''));
 const isCorrect = ref(false); // Initializes as false
+const snackbar = ref({
+    show: false,
+    color: '',
+    text: ''
+});
 
 const inputRefs = ref([]);
 // Function to collect input refs
@@ -178,14 +194,26 @@ const handleKeydown = (inputIndex, event) => {
 };
 const userInputsConcatenated = computed(() => userInputs.value.join(''));
 const handleSubmit = () => {
-    wsStore.sendMessage('completed', {
-        decodedWord: userInputsConcatenated.value,
-        completedAt: new Date().toISOString(),
-        // timeElapsed: (new Date() - new Date(startTime.value)) / 1000,
-        // startTime: startTime.value,
+    if (isCorrect.value) {
+        // Assuming wsStore.sendMessage doesn't need to be awaited or doesn't return a Promise
+        wsStore.sendMessage('completed', {
+            decodedWord: userInputsConcatenated.value,
+            completedAt: new Date().toISOString(),
+            // Additional payload properties as needed
+        });
 
-    });
+        // Update snackbar for successful operation
+        snackbar.value.text = 'Correct!';
+        snackbar.value.color = 'green';
+        snackbar.value.show = true;
+    } else {
+        // Update snackbar for incorrect input
+        snackbar.value.text = 'Not Correct!';
+        snackbar.value.color = 'red';
+        snackbar.value.show = true;
+    }
 };
+
 
 const handleFocus = (event) => {
     event.target.select();

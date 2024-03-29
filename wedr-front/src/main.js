@@ -1,4 +1,5 @@
 import './assets/main.css'
+import 'animate.css';
 
 import { createApp } from "vue";
 import { surveyPlugin } from "survey-vue3-ui";
@@ -13,10 +14,10 @@ import VueCountdown from '@chenfengyuan/vue-countdown';
 
 
 
- 
+
 
 import { createPinia } from 'pinia'
- 
+
 
 import { useWebSocketStore } from './store';
 
