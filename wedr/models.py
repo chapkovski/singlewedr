@@ -96,7 +96,7 @@ Your app description
 
 class Constants(BaseConstants):
     name_in_url = 'wedr'
-    players_per_group = 2
+    players_per_group = None
     # we need to read words from data/words.txt
     with open('data/words.csv', 'r') as f:
         words = [i.strip() for i in f.readlines()]

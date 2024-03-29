@@ -13,8 +13,9 @@ class WorkingPage(Page):
     live_method = 'process_data'
 
     def js_vars(self):
+        delay = self.session.config.get('time_to_work', 120)
         time_to_go = self.participant.vars.setdefault('time_to_go', (
-                datetime.now(timezone.utc) + timedelta(seconds=Constants.time_for_work)).timestamp())
+                datetime.now(timezone.utc) + timedelta(seconds=delay)).timestamp())
         remaining_time = time_to_go - datetime.now(timezone.utc).timestamp()
         current_task = self.player.get_uncompleted_task()
 
